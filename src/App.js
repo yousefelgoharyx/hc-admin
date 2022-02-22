@@ -1,24 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
-
+import ThemeRTL from "./util/ThemeRTL";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import News from "./pages/News/News";
+import Ads from "./pages/Ads/Ads";
+import Login from "./pages/Login/Login";
+import About from "./pages/About/About";
+import { ProtectedRoute } from "./context/auth";
+import History from "./pages/History/History";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeRTL>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <News />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+        <Route
+          path="/ads"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <Ads />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/about"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <About />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/history"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <History />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </ThemeRTL>
   );
 }
 
