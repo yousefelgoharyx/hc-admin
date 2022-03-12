@@ -5,6 +5,7 @@ import News from "./pages/News/News";
 import Ads from "./pages/Ads/Ads";
 import Login from "./pages/Login/Login";
 import About from "./pages/About/About";
+import Sports from "./pages/Sports/Sports";
 import { ProtectedRoute } from "./context/auth";
 import History from "./pages/History/History";
 function App() {
@@ -49,6 +50,17 @@ function App() {
             <Layout>
               <ProtectedRoute>
                 <History />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/sports"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <Sports />
               </ProtectedRoute>
             </Layout>
           }

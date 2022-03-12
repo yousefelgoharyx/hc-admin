@@ -1,79 +1,103 @@
-import { Box, Stack, TextField } from "@mui/material";
+import { Box, Button, IconButton, Modal } from "@mui/material";
+import {
+  SportsSoccerRounded,
+  AddCircleRounded,
+  DeleteRounded,
+  EditRounded,
+} from "@mui/icons-material";
+import { styled } from "@mui/system";
+import DeleteModal from "./DeleteModal";
 import { useState } from "react";
-import { useSnackbar } from "notistack";
-import FormCreate from "../../components/FormCreate";
-import { DataGrid } from "@mui/x-data-grid";
-import useMethod from "../../hooks/useMethod";
-import useGet from "../../hooks/useGet";
-const columns = [
-  { field: "id", headerName: "رقم", width: 90, flex: 1 },
-  {
-    field: "title",
-    headerName: "عنوان الخبر",
-    flex: 1,
-  },
-  {
-    field: "description",
-    headerName: "تفاصيل",
-    flex: 1,
-  },
-];
+import CreateModal from "./CreateModal";
 
-const newsRequestOptions = {
-  headers: { headers: { "Content-Type": "multipart/form-data" } },
-};
+const SportItemContainer = styled(Box)({
+  width: "100%",
+  aspectRatio: "1 / 1",
+  backgroundColor: "#222",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexDirection: "column",
+  gap: "16px",
+  borderRadius: 8,
+  position: "relative",
+  overflow: "hidden",
+});
+
+const SportItemText = styled("div")({
+  fontWeight: "bold",
+  fontSize: "2em",
+  alignSelf: "center",
+});
+
+const SportsItemControl = styled(Box)({
+  position: "absolute",
+  bottom: 16,
+  left: 16,
+  padding: 6,
+  backgroundColor: "#333",
+  display: "flex",
+  gap: 8,
+  borderRadius: "32px",
+});
+
+const SportItem = (props) => (
+  <SportItemContainer>
+    {/* <props.icon style={{ fontSize: "6em" }} /> */}
+    <SportItemText>{props.title}</SportItemText>
+    <SportsItemControl>
+      <IconButton onClick={props.onDelete}>
+        <DeleteRounded />
+      </IconButton>
+      <IconButton onClick={props.onEdit}>
+        <EditRounded />
+      </IconButton>
+    </SportsItemControl>
+  </SportItemContainer>
+);
+
 const Sports = () => {
-  const { enqueueSnackbar } = useSnackbar();
-  const [image, setImage] = useState(null);
-  const { post, loading: addLoading } = useMethod("post", newsRequestOptions);
-  const { loading: getLoading, error, data: rowsData } = useGet("/news");
-  const handleCreateNew = async () => {
-    try {
-      const data = new FormData();
-      data.append("title", "ASD");
-      data.append("description", "ASD");
-      data.append("image", image);
-      const res = await post("/news", data);
-      enqueueSnackbar("تمت اضافة خبر بنجاح", { variant: "success" });
-    } catch {
-      enqueueSnackbar("حدث خطأ ما", { variant: "error" });
-    }
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [createModal, setCreateModal] = useState(false);
+  const handleDelete = () => {
+    setDeleteModal(true);
+  };
+  const handleCreate = () => {
+    setCreateModal(true);
   };
   return (
-    <Box>
-      <FormCreate
-        title="انشاء خبر"
-        action="اضافة خبر"
-        onAction={handleCreateNew}
-        isActionLoading={addLoading}
-        onImageChange={(image) => setImage(image)}
-      >
-        <Stack direction="row">
-          <TextField variant="outlined" fullWidth label="عنوان الخبر" />
-        </Stack>
-        <Stack direction="row">
-          <TextField
-            variant="outlined"
-            multiline
-            rows={8}
-            fullWidth
-            label="عنوان الخبر"
-          />
-        </Stack>
-      </FormCreate>
-      <Box margin={2} height={52 * 7 + 58}>
-        <DataGrid
-          sx={{ bgcolor: "#222" }}
-          rows={rowsData}
-          columns={columns}
-          pageSize={6}
-          rowsPerPageOptions={[6]}
-          // checkboxSelection
-          // disableSelectionOnClick
-        />
-      </Box>
-    </Box>
+    <SportsContainer>
+      <DeleteModal
+        open={deleteModal}
+        onConfirm={handleDelete}
+        onClose={() => setDeleteModal(false)}
+      />
+      <CreateModal
+        open={createModal}
+        onConfirm={handleCreate}
+        onClose={() => setCreateModal(false)}
+      />
+      <SportItem
+        title="كرة قدم"
+        icon={SportsSoccerRounded}
+        onDelete={() => setDeleteModal(true)}
+      />
+      <SportItem title="كرة سلة" icon={SportsSoccerRounded} />
+      <SportItem title="جودو" icon={SportsSoccerRounded} />
+      <SportItem title="كاراتيه" icon={SportsSoccerRounded} />
+      <SportItem title="سباحة" icon={SportsSoccerRounded} />
+      <Button variant="contained" onClick={() => setCreateModal(true)}>
+        <AddCircleRounded style={{ fontSize: "5em" }} />
+      </Button>
+    </SportsContainer>
   );
 };
+
+const SportsContainer = styled(Box)({
+  padding: "32px",
+  display: "grid",
+  gap: "32px",
+  gridTemplateColumns: "repeat(auto-fill,minmax(250px,1fr))",
+});
 
 export default Sports;
