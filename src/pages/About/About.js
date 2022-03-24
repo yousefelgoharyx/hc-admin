@@ -59,7 +59,7 @@ const About = () => {
       <CircularProgress />
     </Box>
   );
-  if (!aboutGetOwner.loading && !aboutGetOwner.error) {
+  if (!aboutGetOwner.loading) {
     content = (
       <FormCreate {...formCreateProps}>
         <Stack direction="row">

@@ -4,6 +4,7 @@ import { useSnackbar } from "notistack";
 import FormCreate from "../../components/FormCreate";
 import useMethod from "../../hooks/useMethod";
 import useGet from "../../hooks/useGet";
+import RichTextEditor from "@mantine/rte";
 
 const RequestOptions = {
   headers: { headers: { "Content-Type": "multipart/form-data" } },
@@ -15,6 +16,7 @@ const defaultFormDataState = {
 };
 
 const History = () => {
+  const [value, onChange] = useState("");
   const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = useState(defaultFormDataState);
   const PostOwner = useMethod("post", RequestOptions);
@@ -59,10 +61,10 @@ const History = () => {
       <CircularProgress />
     </Box>
   );
-  if (!GetOwner.loading && !GetOwner.error) {
+  if (!GetOwner.loading) {
     content = (
       <FormCreate {...formCreateProps}>
-        <Stack direction="row">
+        <Stack direction="column">
           <TextField
             variant="outlined"
             multiline
@@ -73,6 +75,13 @@ const History = () => {
             name="description"
             onChange={onInputChange}
           />
+          {/* <Box style={{ minHeight: 200 }}>
+            <RichTextEditor
+              value={value}
+              onChange={onChange}
+              sx={{ flex: 1 }}
+            />
+          </Box> */}
         </Stack>
       </FormCreate>
     );

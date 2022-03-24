@@ -53,7 +53,7 @@ const data = [
   {
     icon: <RestaurantRounded />,
     label: "المطاعم - اماكن عامة",
-    href: "/resturants",
+    href: "/PublicPlaces",
   },
   {
     icon: <SportsScoreRounded />,

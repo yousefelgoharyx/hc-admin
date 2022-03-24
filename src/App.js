@@ -8,6 +8,7 @@ import About from "./pages/About/About";
 import Sports from "./pages/Sports/Sports";
 import { ProtectedRoute } from "./context/auth";
 import History from "./pages/History/History";
+import PublicPlaces from "./pages/PublicPlaces/PublicPlaces";
 function App() {
   return (
     <ThemeRTL>
@@ -61,6 +62,17 @@ function App() {
             <Layout>
               <ProtectedRoute>
                 <Sports />
+              </ProtectedRoute>
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/PublicPlaces"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <PublicPlaces />
               </ProtectedRoute>
             </Layout>
           }

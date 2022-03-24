@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Modal } from "@mui/material";
+import { Avatar, Box, Button, IconButton, Modal } from "@mui/material";
 import {
   SportsSoccerRounded,
   AddCircleRounded,
@@ -44,6 +44,11 @@ const SportsItemControl = styled(Box)({
 const SportItem = (props) => (
   <SportItemContainer>
     {/* <props.icon style={{ fontSize: "6em" }} /> */}
+    <Avatar
+      alt="Remy Sharp"
+      src="https://reactjs.org/logo-og.png"
+      sx={{ width: 100, height: 100 }}
+    />
     <SportItemText>{props.title}</SportItemText>
     <SportsItemControl>
       <IconButton onClick={props.onDelete}>
