@@ -1,9 +1,24 @@
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Modal } from "@mui/material";
+import { useSnackbar } from "notistack";
 import React from "react";
 import ModalContent from "../../components/ModalContent";
+import useMethod from "../../hooks/useMethod";
 
-const DeleteModal = ({ open, onClose, onConfirm, loading }) => {
+const DeleteModal = ({ open, onClose, id, refetch }) => {
+  const DeleteOwner = useMethod("delete");
+  const { enqueueSnackbar } = useSnackbar();
+  const handleDelete = async () => {
+    console.log(id);
+    try {
+      await DeleteOwner.post(`/api/game/${id}`);
+      await refetch();
+      enqueueSnackbar("تم حذف اللعبة بنجاح", { variant: "success" });
+      onClose();
+    } catch (error) {
+      enqueueSnackbar("حدث خطأ ما", { variant: "error" });
+    }
+  };
   return (
     <Modal open={open} onClose={onClose}>
       <ModalContent>
@@ -14,8 +29,8 @@ const DeleteModal = ({ open, onClose, onConfirm, loading }) => {
           <LoadingButton
             color="error"
             variant="contained"
-            onClick={onConfirm}
-            loading={loading}
+            onClick={handleDelete}
+            loading={DeleteOwner.loading}
           >
             تاكيد
           </LoadingButton>

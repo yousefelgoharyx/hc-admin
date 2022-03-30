@@ -7,47 +7,18 @@ import {
 } from "@mui/icons-material";
 import { styled } from "@mui/system";
 import DeleteModal from "./DeleteModal";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CreateModal from "./CreateModal";
-
-const SportItemContainer = styled(Box)({
-  width: "100%",
-  aspectRatio: "1 / 1",
-  backgroundColor: "#222",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexDirection: "column",
-  gap: "16px",
-  borderRadius: 8,
-  position: "relative",
-  overflow: "hidden",
-});
-
-const SportItemText = styled("div")({
-  fontWeight: "bold",
-  fontSize: "2em",
-  alignSelf: "center",
-});
-
-const SportsItemControl = styled(Box)({
-  position: "absolute",
-  bottom: 16,
-  left: 16,
-  padding: 6,
-  backgroundColor: "#333",
-  display: "flex",
-  gap: 8,
-  borderRadius: "32px",
-});
+import useGet from "../../hooks/useGet";
+import Loader from "../../components/Loader";
+import { baseURL } from "../../util/axios";
 
 const SportItem = (props) => (
   <SportItemContainer>
-    {/* <props.icon style={{ fontSize: "6em" }} /> */}
     <Avatar
-      alt="Remy Sharp"
-      src="https://reactjs.org/logo-og.png"
-      sx={{ width: 100, height: 100 }}
+      alt={props.title}
+      src={baseURL + "/" + props.image}
+      sx={{ width: 150, height: 150 }}
     />
     <SportItemText>{props.title}</SportItemText>
     <SportsItemControl>
@@ -64,38 +35,48 @@ const SportItem = (props) => (
 const Sports = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [createModal, setCreateModal] = useState(false);
-  const handleDelete = () => {
+  const selectedId = useRef(null);
+  const GetOwner = useGet("/api/game");
+  const openCreateModal = () => setCreateModal(true);
+  const handlePrepareDelete = (id) => {
     setDeleteModal(true);
+    selectedId.current = id;
   };
-  const handleCreate = () => {
-    setCreateModal(true);
-  };
-  return (
-    <SportsContainer>
-      <DeleteModal
-        open={deleteModal}
-        onConfirm={handleDelete}
-        onClose={() => setDeleteModal(false)}
-      />
-      <CreateModal
-        open={createModal}
-        onConfirm={handleCreate}
-        onClose={() => setCreateModal(false)}
-      />
-      <SportItem
-        title="كرة قدم"
-        icon={SportsSoccerRounded}
-        onDelete={() => setDeleteModal(true)}
-      />
-      <SportItem title="كرة سلة" icon={SportsSoccerRounded} />
-      <SportItem title="جودو" icon={SportsSoccerRounded} />
-      <SportItem title="كاراتيه" icon={SportsSoccerRounded} />
-      <SportItem title="سباحة" icon={SportsSoccerRounded} />
-      <Button variant="contained" onClick={() => setCreateModal(true)}>
-        <AddCircleRounded style={{ fontSize: "5em" }} />
-      </Button>
-    </SportsContainer>
-  );
+  let content = <Loader />;
+  if (!GetOwner.loading && GetOwner.data) {
+    content = (
+      <SportsContainer>
+        <DeleteModal
+          refetch={GetOwner.backgroundReload}
+          id={selectedId.current}
+          open={deleteModal}
+          onClose={() => setDeleteModal(false)}
+        />
+        <CreateModal
+          refetch={GetOwner.backgroundReload}
+          open={createModal}
+          onClose={() => setCreateModal(false)}
+        />
+        {GetOwner.data.map((item) => (
+          <SportItem
+            key={item.id}
+            title={item.name}
+            image={item.image}
+            onDelete={() => handlePrepareDelete(item.id)}
+          />
+        ))}
+
+        <Button
+          variant="contained"
+          onClick={openCreateModal}
+          sx={{ minHeight: 306 }}
+        >
+          <AddCircleRounded style={{ fontSize: "5em" }} />
+        </Button>
+      </SportsContainer>
+    );
+  }
+  return content;
 };
 
 const SportsContainer = styled(Box)({
@@ -105,4 +86,31 @@ const SportsContainer = styled(Box)({
   gridTemplateColumns: "repeat(auto-fill,minmax(250px,1fr))",
 });
 
+const SportItemContainer = styled(Box)({
+  width: "100%",
+  backgroundColor: "#222",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexDirection: "column",
+  gap: "12px",
+  borderRadius: 24,
+  position: "relative",
+  overflow: "hidden",
+  padding: "16px 0",
+});
+
+const SportItemText = styled("div")({
+  fontWeight: "bold",
+  fontSize: "2em",
+  alignSelf: "center",
+});
+
+const SportsItemControl = styled(Box)({
+  padding: 6,
+  backgroundColor: "#333",
+  display: "flex",
+  gap: 8,
+  borderRadius: "32px",
+});
 export default Sports;

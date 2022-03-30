@@ -1,3 +1,5 @@
+import { DeleteRounded } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import { baseURL } from "../../util/axios";
 
 export const columns = [
@@ -5,11 +7,6 @@ export const columns = [
   {
     field: "title",
     headerName: "عنوان الخبر",
-    flex: 1,
-  },
-  {
-    field: "description",
-    headerName: "تفاصيل",
     flex: 1,
   },
 
@@ -23,6 +20,19 @@ export const columns = [
           style={{ width: 32, height: 32 }}
           src={baseURL + "/" + params.row.image}
         />
+      );
+    },
+  },
+
+  {
+    field: "settings",
+    headerName: "الاعدادات",
+    flex: 1,
+    renderCell: (params) => {
+      return (
+        <IconButton>
+          <DeleteRounded color="#ff3333" />
+        </IconButton>
       );
     },
   },

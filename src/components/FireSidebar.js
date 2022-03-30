@@ -138,7 +138,7 @@ export default function CustomizedList() {
               />
             </ListItem>
             {data.map((item) =>
-              item.href == "/login" ? (
+              item.href === "/login" ? (
                 <ListItemButton
                   onClick={auth.signout}
                   selected={location.pathname === item.href}

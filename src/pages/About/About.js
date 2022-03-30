@@ -1,78 +1,46 @@
-import { Box, CircularProgress, Stack, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Stack } from "@mui/material";
+import { useState } from "react";
 import { useSnackbar } from "notistack";
 import FormCreate from "../../components/FormCreate";
 import useMethod from "../../hooks/useMethod";
 import useGet from "../../hooks/useGet";
-
-const aboutRequestOptions = {
-  headers: { headers: { "Content-Type": "multipart/form-data" } },
-};
-
-const defaultFormDataState = {
-  type: "about",
-  description: "",
-};
+import Loader from "../../components/Loader";
+import RTE from "../../components/RTE";
 
 const About = () => {
+  const [rteValue, setRteValue] = useState("");
   const { enqueueSnackbar } = useSnackbar();
-  const [formData, setFormData] = useState(defaultFormDataState);
-  const aboutPostOwner = useMethod("post", aboutRequestOptions);
-  const aboutGetOwner = useGet("/api/content/about", (data) => {
-    setFormData((prev) => ({
-      ...prev,
-      description: data.description,
-    }));
-  });
-
-  const handleUpdateBio = async () => {
+  const onGetComplete = (data) => setRteValue(data.description);
+  const PostOwner = useMethod("post");
+  const GetOwner = useGet("/api/content/about", onGetComplete);
+  const handleUpdate = async () => {
+    const data = {
+      type: "about",
+      description: rteValue,
+    };
     try {
-      await aboutPostOwner.post("/api/content", formData);
-      await aboutGetOwner.backgroundReload();
+      await PostOwner.post("/api/content", data);
+      await GetOwner.backgroundReload();
       enqueueSnackbar("تم تحديث عن النادي", { variant: "success" });
     } catch {
       enqueueSnackbar("حدث خطأ ما", { variant: "error" });
     }
   };
 
-  const onInputChange = (e) => {
-    const newFormData = { ...formData };
-    const inputKey = e.target.name;
-    newFormData[inputKey] = e.target.value;
-    setFormData(newFormData);
-  };
-
   const formCreateProps = {
     title: "عن النادي",
     action: "تحديث",
-    onAction: handleUpdateBio,
-    isActionLoading: aboutPostOwner.loading,
+    onAction: handleUpdate,
+    isActionLoading: PostOwner.loading,
   };
 
-  let content = (
-    <Box
-      display="flex"
-      height="100%"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <CircularProgress />
-    </Box>
-  );
-  if (!aboutGetOwner.loading) {
+  let content = <Loader />;
+
+  if (!GetOwner.loading) {
     content = (
       <FormCreate {...formCreateProps}>
-        <Stack direction="row">
-          <TextField
-            variant="outlined"
-            multiline
-            rows={8}
-            fullWidth
-            label="اكتب هنا..."
-            value={formData.description}
-            name="description"
-            onChange={onInputChange}
-          />
+        <Stack direction="column">
+          <RTE value={rteValue} onChange={setRteValue} />
         </Stack>
       </FormCreate>
     );

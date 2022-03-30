@@ -1,5 +1,5 @@
 import ThemeRTL from "./util/ThemeRTL";
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import News from "./pages/News/News";
 import Ads from "./pages/Ads/Ads";
@@ -9,74 +9,28 @@ import Sports from "./pages/Sports/Sports";
 import { ProtectedRoute } from "./context/auth";
 import History from "./pages/History/History";
 import PublicPlaces from "./pages/PublicPlaces/PublicPlaces";
+
+const AppLayout = () => (
+  <Layout>
+    <ProtectedRoute>
+      <Outlet />
+    </ProtectedRoute>
+  </Layout>
+);
 function App() {
   return (
     <ThemeRTL>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <ProtectedRoute>
-                <News />
-              </ProtectedRoute>
-            </Layout>
-          }
-        />
-        <Route
-          path="/ads"
-          element={
-            <Layout>
-              <ProtectedRoute>
-                <Ads />
-              </ProtectedRoute>
-            </Layout>
-          }
-        />
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<News />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/ads" element={<Ads />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/sports" element={<Sports />} />
+          <Route path="/PublicPlaces" element={<PublicPlaces />} />
+        </Route>
 
-        <Route
-          path="/about"
-          element={
-            <Layout>
-              <ProtectedRoute>
-                <About />
-              </ProtectedRoute>
-            </Layout>
-          }
-        />
-
-        <Route
-          path="/history"
-          element={
-            <Layout>
-              <ProtectedRoute>
-                <History />
-              </ProtectedRoute>
-            </Layout>
-          }
-        />
-
-        <Route
-          path="/sports"
-          element={
-            <Layout>
-              <ProtectedRoute>
-                <Sports />
-              </ProtectedRoute>
-            </Layout>
-          }
-        />
-
-        <Route
-          path="/PublicPlaces"
-          element={
-            <Layout>
-              <ProtectedRoute>
-                <PublicPlaces />
-              </ProtectedRoute>
-            </Layout>
-          }
-        />
         <Route path="/login" element={<Login />} />
       </Routes>
     </ThemeRTL>

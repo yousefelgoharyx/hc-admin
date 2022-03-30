@@ -6,6 +6,7 @@ import { columns } from "./data";
 import FormCreate from "../../components/FormCreate";
 import useMethod from "../../hooks/useMethod";
 import useGet from "../../hooks/useGet";
+import RTE from "../../components/RTE";
 
 const newsRequestOptions = {
   headers: { "Content-Type": "multipart/form-data" },
@@ -13,26 +14,38 @@ const newsRequestOptions = {
 
 const defaultFormDataState = {
   title: "",
-  description: "",
   image: null,
 };
 
 const News = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = useState(defaultFormDataState);
-  const newsPostOwner = useMethod("post", newsRequestOptions);
-  const newsGetOwner = useGet("/api/news");
+  const [rteValue, setRteValue] = useState("");
+  const postOwner = useMethod("post", newsRequestOptions);
+  const deleteOwner = useMethod("delete");
+  const getOwner = useGet("/api/news");
 
-  const handleCreateNew = async () => {
+  const handleCreate = async () => {
     const data = new FormData();
     data.append("title", formData.title);
-    data.append("description", formData.description);
+    data.append("description", rteValue);
     data.append("image", formData.image);
     try {
-      await newsPostOwner.post("/api/news", data);
-      await newsGetOwner.backgroundReload();
+      await postOwner.post("/api/news", data);
+      await getOwner.backgroundReload();
       enqueueSnackbar("تمت اضافة خبر بنجاح", { variant: "success" });
       setFormData(defaultFormDataState);
+      setRteValue("");
+    } catch {
+      enqueueSnackbar("حدث خطأ ما", { variant: "error" });
+    }
+  };
+
+  const handleDelete = async (row) => {
+    try {
+      await deleteOwner.post(`/api/news/${row.id}`);
+      await getOwner.backgroundReload();
+      enqueueSnackbar("تم مسح الخبر بنجاح", { variant: "success" });
     } catch {
       enqueueSnackbar("حدث خطأ ما", { variant: "error" });
     }
@@ -48,8 +61,8 @@ const News = () => {
   const formCreateProps = {
     title: "انشاء خبر",
     action: "اضافة خبر",
-    onAction: handleCreateNew,
-    isActionLoading: newsPostOwner.loading,
+    onAction: handleCreate,
+    isActionLoading: postOwner.loading,
     image: formData.image,
     setImage: (newImage) => setFormData({ ...formData, image: newImage }),
   };
@@ -67,23 +80,18 @@ const News = () => {
           />
         </Stack>
         <Stack direction="row">
-          <TextField
-            variant="outlined"
-            multiline
-            rows={8}
-            fullWidth
-            label="عنوان الخبر"
-            value={formData.description}
-            name="description"
-            onChange={onInputChange}
-          />
+          <RTE value={rteValue} onChange={setRteValue} />
         </Stack>
       </FormCreate>
       <Box margin={2} height={52 * 7 + 58}>
         <DataGrid
-          loading={newsGetOwner.loading}
+          disableSelectionOnClick
+          disableVirtualization
+          showCellRightBorder={false}
+          onCellClick={handleDelete}
+          loading={getOwner.loading || deleteOwner.loading}
           sx={{ bgcolor: "#222" }}
-          rows={newsGetOwner.data}
+          rows={getOwner.data}
           columns={columns}
           pageSize={6}
           rowsPerPageOptions={[6]}
