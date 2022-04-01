@@ -9,7 +9,6 @@ const DeleteModal = ({ open, onClose, id, refetch }) => {
   const DeleteOwner = useMethod("delete");
   const { enqueueSnackbar } = useSnackbar();
   const handleDelete = async () => {
-    console.log(id);
     try {
       await DeleteOwner.post(`/api/game/${id}`);
       await refetch();

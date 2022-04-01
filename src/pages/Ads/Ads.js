@@ -43,6 +43,7 @@ const Ads = () => {
   };
 
   const handleDelete = async (row) => {
+    if (row.field !== "settings") return;
     try {
       await deleteOwner.post(`/api/ads/${row.id}`);
       await getOwner.backgroundReload();

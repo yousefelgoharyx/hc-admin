@@ -56,6 +56,7 @@ const GameModerators = () => {
   };
 
   const handleDelete = async (row) => {
+    if (row.field !== "settings") return;
     try {
       await deleteOwner.post(`/api/gamemoderator/${row.id}`);
       await getOwner.backgroundReload();

@@ -57,6 +57,7 @@ const TeamModerators = () => {
   };
 
   const handleDelete = async (row) => {
+    if (row.field !== "settings") return;
     try {
       await deleteOwner.post(`/api/teammoderator/${row.id}`);
       await getOwner.backgroundReload();

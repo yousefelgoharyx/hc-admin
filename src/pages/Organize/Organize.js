@@ -47,6 +47,7 @@ const Organize = () => {
   };
 
   const handleDelete = async (row) => {
+    if (row.field !== "settings") return;
     try {
       await deleteOwner.post(`/api/influentialperson/${row.id}`);
       await getOwner.backgroundReload();
