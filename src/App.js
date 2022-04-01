@@ -12,8 +12,12 @@ import PublicPlaces from "./pages/PublicPlaces/PublicPlaces";
 import Sport from "./pages/Sports/Sport";
 import GameModerators from "./pages/GameModerators/GameModerators";
 import TeamModerators from "./pages/TeamModerators/TeamModerators";
+import Vip from "./pages/Vip/Vip";
+
 import Team from "./pages/Team/Team";
 import Players from "./pages/Players/Players";
+import Managerial from "./pages/Managerial/Managerial";
+import Organize from "./pages/Organize/Organize";
 
 const AppLayout = () => (
   <Layout>
@@ -38,6 +42,9 @@ function App() {
           <Route path="/team-moderators" element={<TeamModerators />} />
           <Route path="/team" element={<Team />} />
           <Route path="/players" element={<Players />} />
+          <Route path="/vip" element={<Vip />} />
+          <Route path="/managerial" element={<Managerial />} />
+          <Route path="/organize" element={<Organize />} />
 
           <Route path="/PublicPlaces" element={<PublicPlaces />} />
         </Route>

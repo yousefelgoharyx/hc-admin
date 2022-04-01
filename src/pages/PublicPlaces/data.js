@@ -4,12 +4,7 @@ export const columns = [
   { field: "id", headerName: "رقم", width: 90, flex: 1 },
   {
     field: "title",
-    headerName: "عنوان الخبر",
-    flex: 1,
-  },
-  {
-    field: "description",
-    headerName: "تفاصيل",
+    headerName: "اسم المكان",
     flex: 1,
   },
 

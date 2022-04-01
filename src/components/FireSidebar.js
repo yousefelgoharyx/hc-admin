@@ -22,6 +22,8 @@ import {
   ManageAccountsRounded,
   SnowshoeingRounded,
   GroupsRounded,
+  AccountBoxRounded,
+  MergeRounded,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/auth";
@@ -70,7 +72,17 @@ const data = [
   {
     icon: <PersonPinCircleRounded />,
     label: "شخصيات مؤثرة",
-    href: "/people",
+    href: "/vip",
+  },
+  {
+    icon: <AccountBoxRounded />,
+    label: "مجلس إداري",
+    href: "/managerial",
+  },
+  {
+    icon: <MergeRounded />,
+    label: "الهيكل التنظيمي",
+    href: "/organize",
   },
   {
     icon: <RestaurantRounded />,

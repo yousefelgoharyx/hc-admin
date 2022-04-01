@@ -6,6 +6,7 @@ import { columns } from "./data";
 import FormCreate from "../../components/FormCreate";
 import useMethod from "../../hooks/useMethod";
 import useGet from "../../hooks/useGet";
+import RTE from "../../components/RTE";
 
 const newsRequestOptions = {
   headers: { "Content-Type": "multipart/form-data" },
@@ -13,26 +14,27 @@ const newsRequestOptions = {
 
 const defaultFormDataState = {
   title: "",
-  description: "",
   image: null,
 };
 
 const PublicPlaces = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = useState(defaultFormDataState);
+  const [rteValue, setRteValue] = useState("");
   const publicPlacesPostOwner = useMethod("post", newsRequestOptions);
   const publicPlacesGetOwner = useGet("/api/publicplaces");
 
   const handleCreateNew = async () => {
     const data = new FormData();
     data.append("title", formData.title);
-    data.append("description", formData.description);
+    data.append("description", rteValue);
     data.append("image", formData.image);
     try {
       await publicPlacesPostOwner.post("/api/publicplaces", data);
       await publicPlacesGetOwner.backgroundReload();
       enqueueSnackbar("تمت اضافة المكان بنجاح", { variant: "success" });
       setFormData(defaultFormDataState);
+      setRteValue("");
     } catch {
       enqueueSnackbar("حدث خطأ ما", { variant: "error" });
     }
@@ -67,16 +69,7 @@ const PublicPlaces = () => {
           />
         </Stack>
         <Stack direction="row">
-          <TextField
-            variant="outlined"
-            multiline
-            rows={8}
-            fullWidth
-            label="عن المكان"
-            value={formData.description}
-            name="description"
-            onChange={onInputChange}
-          />
+          <RTE value={rteValue} onChange={setRteValue} />
         </Stack>
       </FormCreate>
       <Box margin={2} height={52 * 7 + 58}>
