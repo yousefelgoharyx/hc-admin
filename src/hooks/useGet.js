@@ -16,7 +16,7 @@ const useGet = (url, callback = () => {}) => {
       setError(false);
       callback(res.data);
     } catch (error) {
-      setData(error);
+      setData(null);
       setLoading(false);
       setError(true);
     }

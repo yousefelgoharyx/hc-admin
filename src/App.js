@@ -9,6 +9,11 @@ import Sports from "./pages/Sports/Sports";
 import { ProtectedRoute } from "./context/auth";
 import History from "./pages/History/History";
 import PublicPlaces from "./pages/PublicPlaces/PublicPlaces";
+import Sport from "./pages/Sports/Sport";
+import GameModerators from "./pages/GameModerators/GameModerators";
+import TeamModerators from "./pages/TeamModerators/TeamModerators";
+import Team from "./pages/Team/Team";
+import Players from "./pages/Players/Players";
 
 const AppLayout = () => (
   <Layout>
@@ -28,6 +33,12 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/history" element={<History />} />
           <Route path="/sports" element={<Sports />} />
+          <Route path="/sports/:id" element={<Sport />} />
+          <Route path="/game-moderators" element={<GameModerators />} />
+          <Route path="/team-moderators" element={<TeamModerators />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/players" element={<Players />} />
+
           <Route path="/PublicPlaces" element={<PublicPlaces />} />
         </Route>
 

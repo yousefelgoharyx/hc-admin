@@ -1,4 +1,12 @@
-import { Box, Stack, TextField } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 import { DataGrid } from "@mui/x-data-grid";
@@ -7,6 +15,7 @@ import FormCreate from "../../components/FormCreate";
 import useMethod from "../../hooks/useMethod";
 import useGet from "../../hooks/useGet";
 import RTE from "../../components/RTE";
+import FileUpload from "../../components/FileUpload";
 import Error from "../../components/Error";
 
 const newsRequestOptions = {
@@ -14,29 +23,30 @@ const newsRequestOptions = {
 };
 
 const defaultFormDataState = {
-  title: "",
-  image: null,
+  name: "",
+  logo: null,
+  gameId: null,
 };
 
-const News = () => {
+const Team = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = useState(defaultFormDataState);
-  const [rteValue, setRteValue] = useState("");
   const postOwner = useMethod("post", newsRequestOptions);
   const deleteOwner = useMethod("delete");
-  const getOwner = useGet("/api/news");
+  const getOwner = useGet("/api/team");
+  const gamesOwner = useGet("/api/game");
 
   const handleCreate = async () => {
     const data = new FormData();
-    data.append("title", formData.title);
-    data.append("description", rteValue);
-    data.append("image", formData.image);
+    data.append("name", formData.name);
+    data.append("logo", formData.logo);
+    data.append("gameId", formData.gameId);
+
     try {
-      await postOwner.post("/api/news", data);
+      await postOwner.post("/api/team", data);
       await getOwner.backgroundReload();
-      enqueueSnackbar("تمت اضافة خبر بنجاح", { variant: "success" });
+      enqueueSnackbar("تمت اضافة الفرقة بنجاح", { variant: "success" });
       setFormData(defaultFormDataState);
-      setRteValue("");
     } catch {
       enqueueSnackbar("حدث خطأ ما", { variant: "error" });
     }
@@ -44,9 +54,9 @@ const News = () => {
 
   const handleDelete = async (row) => {
     try {
-      await deleteOwner.post(`/api/news/${row.id}`);
+      await deleteOwner.post(`/api/team/${row.id}`);
       await getOwner.backgroundReload();
-      enqueueSnackbar("تم مسح الخبر بنجاح", { variant: "success" });
+      enqueueSnackbar("تم مسح الفرقة بنجاح", { variant: "success" });
     } catch {
       enqueueSnackbar("حدث خطأ ما", { variant: "error" });
     }
@@ -60,29 +70,50 @@ const News = () => {
   };
 
   const formCreateProps = {
-    title: "انشاء خبر",
-    action: "اضافة خبر",
+    title: "الفرق",
+    action: "اضافة فرقة",
     onAction: handleCreate,
     isActionLoading: postOwner.loading,
-    image: formData.image,
-    setImage: (newImage) => setFormData({ ...formData, image: newImage }),
+    image: formData.logo,
+    setImage: (newImage) => setFormData({ ...formData, logo: newImage }),
   };
   if (getOwner.error) return <Error />;
   return (
     <Box>
       <FormCreate {...formCreateProps}>
-        <Stack direction="row">
+        <Stack direction="column" spacing={2}>
           <TextField
             variant="outlined"
             fullWidth
-            label="عنوان الخبر"
-            value={formData.title}
-            name="title"
+            label="اسم الفرقة"
+            value={formData.name}
+            name="name"
             onChange={onInputChange}
           />
-        </Stack>
-        <Stack direction="row">
-          <RTE value={rteValue} onChange={setRteValue} />
+
+          <FormControl fullWidth>
+            <InputLabel id="team">اللعبة</InputLabel>
+            <Select
+              onChange={(e) =>
+                setFormData({ ...formData, gameId: e.target.value })
+              }
+              id="team"
+              value={formData.gameId}
+              label={
+                formData.gameId
+                  ? gamesOwner.data.filter(
+                      (game) => game.id === formData.gameId
+                    ).name
+                  : null
+              }
+            >
+              {gamesOwner.data
+                ? gamesOwner.data.map((game) => (
+                    <MenuItem value={game.id}>{game.name}</MenuItem>
+                  ))
+                : null}
+            </Select>
+          </FormControl>
         </Stack>
       </FormCreate>
       <Box margin={2} height={52 * 7 + 58}>
@@ -103,4 +134,4 @@ const News = () => {
   );
 };
 
-export default News;
+export default Team;

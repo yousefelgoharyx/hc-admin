@@ -3,6 +3,7 @@ import {
   SportsSoccerRounded,
   AddCircleRounded,
   DeleteRounded,
+  VisibilityRounded,
   EditRounded,
 } from "@mui/icons-material";
 import { styled } from "@mui/system";
@@ -12,7 +13,8 @@ import CreateModal from "./CreateModal";
 import useGet from "../../hooks/useGet";
 import Loader from "../../components/Loader";
 import { baseURL } from "../../util/axios";
-
+import { useNavigate } from "react-router-dom";
+import Error from "../../components/Error";
 const SportItem = (props) => (
   <SportItemContainer>
     <Avatar
@@ -26,7 +28,7 @@ const SportItem = (props) => (
         <DeleteRounded />
       </IconButton>
       <IconButton onClick={props.onEdit}>
-        <EditRounded />
+        <VisibilityRounded />
       </IconButton>
     </SportsItemControl>
   </SportItemContainer>
@@ -37,13 +39,16 @@ const Sports = () => {
   const [createModal, setCreateModal] = useState(false);
   const selectedId = useRef(null);
   const GetOwner = useGet("/api/game");
+  const navigate = useNavigate();
   const openCreateModal = () => setCreateModal(true);
   const handlePrepareDelete = (id) => {
     setDeleteModal(true);
     selectedId.current = id;
   };
   let content = <Loader />;
-  if (!GetOwner.loading && GetOwner.data) {
+  if (GetOwner.error) content = <Error />;
+  if (!GetOwner.loading && GetOwner.data && !GetOwner.error) {
+    console.log(GetOwner);
     content = (
       <SportsContainer>
         <DeleteModal
@@ -60,6 +65,7 @@ const Sports = () => {
         {GetOwner.data.map((item) => (
           <SportItem
             key={item.id}
+            onEdit={() => navigate(`/sports/${item.id}`)}
             title={item.name}
             image={item.image}
             onDelete={() => handlePrepareDelete(item.id)}

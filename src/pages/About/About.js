@@ -6,6 +6,7 @@ import useMethod from "../../hooks/useMethod";
 import useGet from "../../hooks/useGet";
 import Loader from "../../components/Loader";
 import RTE from "../../components/RTE";
+import Error from "../../components/Error";
 
 const About = () => {
   const [rteValue, setRteValue] = useState("");
@@ -35,7 +36,6 @@ const About = () => {
   };
 
   let content = <Loader />;
-
   if (!GetOwner.loading) {
     content = (
       <FormCreate {...formCreateProps}>

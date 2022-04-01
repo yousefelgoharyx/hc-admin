@@ -7,6 +7,7 @@ import FormCreate from "../../components/FormCreate";
 import useMethod from "../../hooks/useMethod";
 import useGet from "../../hooks/useGet";
 import RTE from "../../components/RTE";
+import Error from "../../components/Error";
 
 const requestOptions = {
   headers: { "Content-Type": "multipart/form-data" },
@@ -66,6 +67,7 @@ const Ads = () => {
     image: formData.image,
     setImage: (newImage) => setFormData({ ...formData, image: newImage }),
   };
+  if (getOwner.error) return <Error />;
   return (
     <Box>
       <FormCreate {...formCreateProps}>

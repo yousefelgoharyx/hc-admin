@@ -6,6 +6,7 @@ import useMethod from "../../hooks/useMethod";
 import useGet from "../../hooks/useGet";
 import Loader from "../../components/Loader";
 import RTE from "../../components/RTE";
+import Error from "../../components/Error";
 
 const History = () => {
   const [rteValue, setRteValue] = useState("");

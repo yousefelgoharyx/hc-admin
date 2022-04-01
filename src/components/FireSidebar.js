@@ -19,6 +19,9 @@ import {
   AnalyticsRounded,
   InfoRounded,
   HistoryRounded,
+  ManageAccountsRounded,
+  SnowshoeingRounded,
+  GroupsRounded,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/auth";
@@ -44,7 +47,26 @@ const data = [
     label: "الالعاب الرياضية",
     href: "/sports",
   },
-
+  {
+    icon: <ManageAccountsRounded />,
+    label: "مديرين الالعاب",
+    href: "/game-moderators",
+  },
+  {
+    icon: <ManageAccountsRounded />,
+    label: "مديرين الفرق",
+    href: "/team-moderators",
+  },
+  {
+    icon: <SnowshoeingRounded />,
+    label: "اللاعبين",
+    href: "/players",
+  },
+  {
+    icon: <GroupsRounded />,
+    label: "الفرق",
+    href: "/team",
+  },
   {
     icon: <PersonPinCircleRounded />,
     label: "شخصيات مؤثرة",
@@ -147,6 +169,7 @@ export default function CustomizedList() {
                     py: 1,
                     minHeight: 32,
                     color: "rgba(255,255,255,.8)",
+                    textDecoration: "none",
                   }}
                 >
                   <ListItemIcon sx={{ color: "inherit" }}>
@@ -158,10 +181,15 @@ export default function CustomizedList() {
                       fontSize: 14,
                       fontWeight: "medium",
                     }}
+                    sx={{ textDecoration: "none" }}
                   />
                 </ListItemButton>
               ) : (
-                <Link to={item.href} key={item.href}>
+                <Link
+                  to={item.href}
+                  key={item.href}
+                  style={{ textDecoration: "none" }}
+                >
                   <ListItemButton
                     selected={location.pathname === item.href}
                     key={item.label}
@@ -169,6 +197,7 @@ export default function CustomizedList() {
                       py: 1,
                       minHeight: 32,
                       color: "rgba(255,255,255,.8)",
+                      textDecoration: "none",
                     }}
                   >
                     <ListItemIcon sx={{ color: "inherit" }}>
@@ -180,6 +209,7 @@ export default function CustomizedList() {
                         fontSize: 14,
                         fontWeight: "medium",
                       }}
+                      sx={{ textDecoration: "none" }}
                     />
                   </ListItemButton>
                 </Link>
