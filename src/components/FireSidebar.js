@@ -121,13 +121,35 @@ const mobileStyles = {
     height: "100vh",
     zIndex: 9999,
   },
+  "::-webkit-scrollbar": {
+    width: 6,
+  },
+
+  "::-webkit-scrollbar-track": {
+    background: "#111",
+  },
+
+  "::-webkit-scrollbar-thumb": {
+    background: "#333",
+  },
+
+  "::-webkit-scrollbar-thumb:hover": {
+    background: "#555",
+  },
 };
 
 export default function CustomizedList() {
   const location = useLocation();
   const auth = useAuth();
   return (
-    <Box sx={{ display: "flex", ...mobileStyles }}>
+    <Box
+      sx={{
+        display: "flex",
+        ...mobileStyles,
+        overflowY: "auto",
+        backgroundColor: "#222",
+      }}
+    >
       <Paper elevation={0} sx={{ maxWidth: 300, width: 250 }}>
         <FireNav component="nav" disablePadding>
           <ListItemButton component="div">

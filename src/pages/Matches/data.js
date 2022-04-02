@@ -1,7 +1,7 @@
 import { DeleteRounded, EditRounded } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { baseURL } from "../../util/axios";
-
+import { format } from "date-fns";
 export const columns = [
   { field: "id", headerName: "رقم", width: 90, flex: 1 },
   {
@@ -13,6 +13,10 @@ export const columns = [
     field: "matchTime",
     headerName: "الميعاد",
     flex: 1,
+    renderCell: (params) => {
+      console.log(params.row.matchTime);
+      return format(new Date(params.row?.matchTime), "dd/MM - aaaaa'm' hh:mm");
+    },
   },
   {
     field: "fTeamName",
@@ -35,19 +39,25 @@ export const columns = [
     flex: 1,
   },
   {
-    field: "settings",
-    headerName: "الاعدادات",
-    flex: 1,
+    field: "delete",
+    headerName: "مسح",
     renderCell: (params) => {
       return (
-        <>
-          <IconButton>
-            <DeleteRounded color="#ff3333" />
-          </IconButton>
-          <IconButton>
-            <EditRounded color="#ff3333" />
-          </IconButton>
-        </>
+        <IconButton>
+          <DeleteRounded color="#ff3333" />
+        </IconButton>
+      );
+    },
+  },
+
+  {
+    field: "edit",
+    headerName: "تعديل النتيجة",
+    renderCell: (params) => {
+      return (
+        <IconButton>
+          <EditRounded color="#ff3333" />
+        </IconButton>
       );
     },
   },

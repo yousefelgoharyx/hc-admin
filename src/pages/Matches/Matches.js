@@ -3,11 +3,12 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { Box, Stack, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useSnackbar } from "notistack";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ImageUpload from "../../components/ImageUpload";
 import useGet from "../../hooks/useGet";
 import useMethod from "../../hooks/useMethod";
 import { columns } from "./data";
+import EditModal from "./EditModal";
 
 const newsRequestOptions = {
   headers: { "Content-Type": "multipart/form-data" },
@@ -27,9 +28,12 @@ const defaultFormDataState = {
 const Matches = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = useState(defaultFormDataState);
+  const [open, setOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
   const postOwner = useMethod("post", newsRequestOptions);
   const deleteOwner = useMethod("delete");
   const getOwner = useGet("/api/matches");
+
   const onInputChange = (e) => {
     const newFormData = { ...formData };
     const inputKey = e.target.name;
@@ -50,15 +54,23 @@ const Matches = () => {
     try {
       await postOwner.post("/api/matches", data);
       setFormData(defaultFormDataState);
+      getOwner.backgroundReload();
       enqueueSnackbar("تمت اضافة مبارة بنجاح", { variant: "success" });
     } catch {
       enqueueSnackbar("حدث خطأ ما", { variant: "error" });
     }
   };
-
+  const handleCellClick = (row) => {
+    if (row.field === "delete") {
+      handleDelete(row);
+    } else if (row.field === "edit") {
+      setSelectedRow(row.row);
+      setOpen(true);
+    }
+  };
   const handleDelete = async (row) => {
     try {
-      await deleteOwner.post(`/api/news/${row.id}`);
+      await deleteOwner.post(`/api/matches/${row.id}`);
       await getOwner.backgroundReload();
       enqueueSnackbar("تم مسح الخبر بنجاح", { variant: "success" });
     } catch {
@@ -67,6 +79,12 @@ const Matches = () => {
   };
   return (
     <Stack>
+      <EditModal
+        open={open}
+        onClose={() => setOpen(false)}
+        refetch={getOwner.backgroundReload}
+        row={selectedRow}
+      />
       <Box sx={{ backgroundColor: "#222" }} p={4} m={4} borderRadius={2}>
         <Stack justifyContent="center">
           <Stack
@@ -148,7 +166,7 @@ const Matches = () => {
           sx={{ bgcolor: "#222" }}
           rows={getOwner.data}
           columns={columns}
-          onCellClick={handleDelete}
+          onCellClick={handleCellClick}
           pageSize={6}
           rowsPerPageOptions={[6]}
         />
