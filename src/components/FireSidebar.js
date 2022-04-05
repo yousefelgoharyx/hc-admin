@@ -24,6 +24,8 @@ import {
   GroupsRounded,
   AccountBoxRounded,
   MergeRounded,
+  BusinessCenterRounded,
+  MiscellaneousServicesRounded,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/auth";
@@ -69,6 +71,24 @@ const data = [
     label: "الفرق",
     href: "/team",
   },
+  {
+    icon: <BusinessCenterRounded />,
+    label: "مركز الخدمات",
+    href: "/center",
+  },
+
+  {
+    icon: <ManageAccountsRounded />,
+    label: "مديرين مراكز الخدمات",
+    href: "/center-moderators",
+  },
+
+  {
+    icon: <MiscellaneousServicesRounded />,
+    label: "خدمات مراكز الخدمات",
+    href: "/center-services",
+  },
+
   {
     icon: <PersonPinCircleRounded />,
     label: "شخصيات مؤثرة",

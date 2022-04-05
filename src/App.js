@@ -19,6 +19,9 @@ import Players from "./pages/Players/Players";
 import Managerial from "./pages/Managerial/Managerial";
 import Organize from "./pages/Organize/Organize";
 import Matches from "./pages/Matches/Matches";
+import Center from "./pages/Center/Center";
+import CenterModerators from "./pages/CenterModerators/CenterModerators";
+import CenterServices from "./pages/CenterServices/CenterServices";
 
 const AppLayout = () => (
   <Layout>
@@ -47,6 +50,9 @@ function App() {
           <Route path="/managerial" element={<Managerial />} />
           <Route path="/organize" element={<Organize />} />
           <Route path="/matches" element={<Matches />} />
+          <Route path="/center" element={<Center />} />
+          <Route path="/center-moderators" element={<CenterModerators />} />
+          <Route path="/center-services" element={<CenterServices />} />
 
           <Route path="/PublicPlaces" element={<PublicPlaces />} />
         </Route>
